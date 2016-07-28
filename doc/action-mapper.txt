@@ -1,0 +1,52 @@
+*action-mapper.txt*  Act on text objects with functions and commands
+
+DESCRIPTION                                                  *action-mapper*
+
+This is a slightly modified version of the code from this article in Vim
+wikia:
+http://vim.wikia.com/wiki/Act_on_text_objects_with_custom_functions
+
+USAGE                                                  *action-mapper-usage*
+
+                                                               *MapAction()*
+MapAction({algorithm}, {key})
+
+                        Create normal and visual mode mappings that apply
+                        {algorithm} to the text covered by {motion}, [count]
+                        line(s), and the visual selection.
+
+                        When {key} is <Leader>x, the following mappings will
+                        be created:
+                        - <Leader>x{motion}	applies to moved-over text
+                        - <Leader>xx		applies to entire current line
+                        - {Visual}<Leader>xx	applies to visual selection
+                        For the linewise normal mode mapping, the last
+                        character of {key} is doubled, as is customary in Vim.
+
+                        This plugin provides a custom autocmd event that is
+                        chained to the VimEnter event. All mappings must be
+                        created using this custom event. See
+                        |action-mapper-example|.
+
+EXAMPLE                                              *action-mapper-example*
+
+The following causes <leader>r to reverse a string. The ReverseString function
+simply takes the string as an argument and reverses it: >
+
+    function! ReverseString(str)
+        let result = join(reverse(split(a:str, '\zs')), '')
+        let result = substitute(result, '^\n', '', '')
+        return result
+    endfunction
+
+Adding the following to your |vimrc|: >
+
+    autocmd User MapActions call MapAction('ReverseString', '<Leader>r')
+
+Will cause this plugin to create this set of mappings:
+
+    <Leader>r{motion}   calls ReverseString on the text covered by {motion}
+    <Leader>rr		calls ReverseString on [count] line(s)
+    {Visual}<Leader>r   calls ReverseString on the visual selection
+
+ vim:tw=78:et:ft=help:norl:
