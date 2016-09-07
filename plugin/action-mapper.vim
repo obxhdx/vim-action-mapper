@@ -1,5 +1,10 @@
 " Adapted from http://vim.wikia.com/wiki/Act_on_text_objects_with_custom_functions
 
+function! s:PrintError(msg)
+  let prefix = '[vim-action-mapper]'
+  echohl ErrorMsg | echo prefix.' '.a:msg | echohl None
+endfunction
+
 function! s:DoAction(algorithm, type)
   " backup settings that we will change
   let sel_save = &selection
@@ -31,11 +36,21 @@ function! s:DoAction(algorithm, type)
   endif
 
   if exists('*'.a:algorithm)
-    " call the mapped function, passing it the contents of the unnamed register
-    let repl = {a:algorithm}(@@)
+    try
+      " call the mapped function, passing it the contents of the unnamed register
+      let repl = {a:algorithm}(@@)
+    catch /E118/
+      call s:PrintError('Mapped function must accept a "text" parameter: '.a:algorithm)
+      return
+    endtry
+
   elseif exists(':'.a:algorithm) == 2
     " call the mapped command
     let repl = execute(a:algorithm, 'silent')
+
+  else
+    call s:PrintError('No function or command found: '.a:algorithm)
+    return
   endif
 
   " if the function returned a value, then replace the text
