@@ -17,3 +17,9 @@ See [documentation](https://github.com/obxhdx/vim-action-mapper/blob/master/doc/
 ## Related plugins
 
 [TextTransform](http://www.vim.org/scripts/script.php?script_id=4005) does exactly the same thing. The only downside (for me) is that it requires [another lib](http://www.vim.org/scripts/script.php?script_id=4433).
+
+## License
+
+Code adapted from [vim-unimpaired](https://github.com/tpope/vim-unimpaired) by Tim Pope.
+
+Distributed under the same terms as Vim itself. See `:help license`.
