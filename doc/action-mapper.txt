@@ -31,9 +31,9 @@ MapAction({algorithm}, {key})
 EXAMPLE                                              *action-mapper-example*
 
 The following causes <leader>r to reverse a string. The ReverseString function
-simply takes the string as an argument and reverses it: >
+takes the string as an argument and reverses it: >
 
-    function! ReverseString(str)
+    function! ReverseString(str, ...)
         let result = join(reverse(split(a:str, '\zs')), '')
         let result = substitute(result, '^\n', '', '')
         return result
@@ -48,5 +48,17 @@ Will cause this plugin to create this set of mappings:
     <Leader>r{motion}   calls ReverseString on the text covered by {motion}
     <Leader>rr		calls ReverseString on [count] line(s)
     {Visual}<Leader>r   calls ReverseString on the visual selection
+
+Please note that all mapped functions must take two arguments, the first is
+the text originated from the motion and the second is the motion type:
+
+    " Do something different when the text came from a visual selection
+    function! ReverseString(str, a:type)
+        if a:type == 'v'
+          " Do something
+        else
+          " Do something else
+        endif
+    endfunction
 
  vim:tw=78:et:ft=help:norl:

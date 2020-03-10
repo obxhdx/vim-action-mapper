@@ -37,8 +37,8 @@ function! s:DoAction(algorithm, type)
 
   if exists('*'.a:algorithm)
     try
-      " call the mapped function, passing it the contents of the unnamed register
-      let repl = {a:algorithm}(@@)
+      " call the mapped function, passing it the contents of the unnamed register and the text motion type
+      let repl = {a:algorithm}(@@, a:type)
     catch /E118/
       call s:PrintError('Mapped function must accept a "text" parameter: '.a:algorithm)
       return
